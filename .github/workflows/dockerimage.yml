@@ -1,0 +1,23 @@
+name: docker-build-publish
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish README to DockerHub
+      run: docker run --rm -v ${{ github.workspace }}/README.md:/data/README.md -e DOCKERHUB_USERNAME=tomhomewood -e DOCKERHUB_PASSWORD=${{ secrets.DOCKER_PASSWORD }} -e DOCKERHUB_REPO_NAME=android-build sheogorath/readme-to-dockerhub
+    - name: Build the Docker image
+      run: ./build-docker-image.sh
+    - name: Docker Push
+      uses: opspresso/action-docker@v0.2.2
+      env:
+          USERNAME: tomhomewood
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          IMAGE_NAME: "tomhomewood/android-build"
+          TAG_NAME: "latest"
