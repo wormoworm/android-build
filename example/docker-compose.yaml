@@ -1,0 +1,14 @@
+#!/bin/bash
+# Docker-compose template for use with the tomhomewood/android-build image.
+
+version: "2.2"
+
+services:
+  android-build:
+    image: tomhomewood/android-build:latest
+    container_name: android-build
+    command: /scripts/entrypoint-local.sh
+    environment:
+      - GIT_REPOSITORY=https://github.com/wormoworm/jmri-roster-android.git
+    volumes:
+      - $PWD/scripts_local:/scripts/local/
